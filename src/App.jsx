@@ -1,23 +1,24 @@
 import React, { useState } from "react";
 import VideoPlayer from "./VideoPlayer";
-import "./App.css";
 import VideoPlaylist from "./VideoPlaylist";
+import "./App.css"; // Import your CSS file
 
 const App = () => {
   const [currentVideoSelected, setCurrentVideoSelected] = useState(null);
   return (
-    <div>
-      <h1>Video Player</h1>
-      <div className=".video-player-container">
+    <div className="app-container">
+      {" "}
+      {/* Apply any necessary styles to the app container */}
+      <div className="video-player-container">
         <VideoPlayer
           currentVideoSelected={currentVideoSelected}
           setCurrentVideoSelected={setCurrentVideoSelected}
         />
+        <VideoPlaylist
+          currentVideoSelected={currentVideoSelected}
+          setCurrentVideoSelected={setCurrentVideoSelected}
+        />
       </div>
-      <VideoPlaylist
-        currentVideoSelected={currentVideoSelected}
-        setCurrentVideoSelected={setCurrentVideoSelected}
-      />
     </div>
   );
 };

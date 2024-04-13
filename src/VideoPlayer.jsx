@@ -7,17 +7,62 @@ import {
   IconChevronDown,
   IconMaximize,
   IconMinimize,
+  IconVolume,
 } from "@tabler/icons-react";
 
 function VideoPlayer({ currentVideoSelected, setCurrentVideoSelected }) {
+  // Existing states and refs
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [currentSpeed, setCurrentSpeed] = useState("1.0");
   const [openSpeedOption, setOpenSpeedOption] = useState(false);
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
+  const [volume, setVolume] = useState(100);
+  const [isMuted, setIsMuted] = useState(false);
+  const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const videoRef = useRef(null);
   const [playIcon, setPlayIcon] = useState(<IconPlayerPlay />);
+  const hideTimeoutRef = useRef(null);
+  const [controlsVisible, setControlsVisible] = useState(true);
+
+  // Control visibility based on mouse movement
+  const handleMouseMovement = () => {
+    setControlsVisible(true); // Show controls when mouse moves
+    clearTimeout(hideTimeoutRef.current); // Clear existing timeout
+    hideTimeoutRef.current = setTimeout(() => {
+      setControlsVisible(false); // Hide controls after 3 seconds of inactivity
+    }, 3000);
+  };
+
+  // Event listener for mouse movement
+  useEffect(() => {
+    const videoWrapper = videoRef.current.parentNode;
+    videoWrapper.addEventListener("mousemove", handleMouseMovement);
+
+    return () => {
+      videoWrapper.removeEventListener("mousemove", handleMouseMovement);
+      clearTimeout(hideTimeoutRef.current); // Clean up timeout on unmount
+    };
+  }, []);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.volume = volume / 100; // Adjust volume as a fraction of 100
+    }
+  }, [volume]);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      setIsMuted(!isMuted);
+      videoRef.current.muted = !isMuted;
+    }
+  };
+
+  const handleVolumeChange = (event) => {
+    setVolume(event.target.value);
+    setShowVolumeSlider(true); // Keep slider visible while adjusting
+  };
 
   useEffect(() => {
     // This checks if the currentVideoSelected is a File object before creating an object URL
@@ -154,21 +199,26 @@ function VideoPlayer({ currentVideoSelected, setCurrentVideoSelected }) {
   }, [isPlaying]);
 
   return (
-    <div>
-      <input type="file" accept="video/*" onChange={handleFileChange} />
-      <div className="video-wrapper">
-        {currentVideoSelected && (
-          <>
-            <video
-              className="video"
-              ref={videoRef}
-              src={currentVideoSelected}
-              controls={false}
-              onLoadedMetadata={handleLoadedMetadata}
-              onTimeUpdate={handleTimeUpdate}
-            />
+    <div className="video-wrapper">
+      {currentVideoSelected && (
+        <>
+          <video
+            className="video"
+            ref={videoRef}
+            src={currentVideoSelected}
+            controls={false}
+            onLoadedMetadata={handleLoadedMetadata}
+            onTimeUpdate={handleTimeUpdate}
+            onClick={togglePlay}
+          />
 
-            <div className="play-button" onClick={togglePlay}>
+          <>
+            <div
+              className={`play-button ${
+                !controlsVisible ? "hide-buttons" : ""
+              }`}
+              onClick={togglePlay}
+            >
               {playIcon}
             </div>
             <input
@@ -177,20 +227,53 @@ function VideoPlayer({ currentVideoSelected, setCurrentVideoSelected }) {
               max="100"
               value={(currentTime / duration) * 100 || 0}
               onChange={handleSeek}
-              className="seek-button"
+              className={`seek-button input-slider ${
+                !controlsVisible ? "hide-buttons" : ""
+              }`}
             />
-            <span className="timer">
-              {formatTime(currentTime.toFixed(0))} /{" "}
-              {formatTime(duration.toFixed(0))}
-            </span>
-            <div className="fullscreen" onClick={toggleFullscreen}>
+            <div
+              className={`left-buttons ${
+                !controlsVisible ? "hide-buttons" : ""
+              }`}
+            >
+              <span>
+                {formatTime(currentTime.toFixed(0))} /{" "}
+                {formatTime(duration.toFixed(0))}
+              </span>
+              <div
+                className="volume"
+                onMouseEnter={() => setShowVolumeSlider(true)}
+                onMouseLeave={() => setShowVolumeSlider(false)}
+              >
+                <IconVolume
+                  onClick={() => setShowVolumeSlider(!showVolumeSlider)}
+                  color={isMuted ? "gray" : "white"}
+                />
+                {showVolumeSlider && (
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={volume}
+                    onChange={handleVolumeChange}
+                    className="volume-slider input-slider"
+                    onMouseEnter={() => setShowVolumeSlider(true)}
+                    onMouseLeave={() => setShowVolumeSlider(false)}
+                  />
+                )}
+              </div>
+            </div>
+            <div
+              className={`fullscreen ${!controlsVisible ? "hide-buttons" : ""}`}
+              onClick={toggleFullscreen}
+            >
               {!fullscreenOpen ? (
                 <IconMaximize color="white" />
               ) : (
                 <IconMinimize color="white" />
               )}
             </div>
-            <div className="speed">
+            <div className={`speed ${!controlsVisible ? "hide-buttons" : ""}`}>
               {openSpeedOption && (
                 <>
                   <div
@@ -241,29 +324,9 @@ function VideoPlayer({ currentVideoSelected, setCurrentVideoSelected }) {
                 {!openSpeedOption ? <IconChevronUp /> : <IconChevronDown />}
               </div>
             </div>
-
-            {/* <select
-              className="speed"
-              onChange={handleSpeedChange}
-              defaultValue="1.0"
-            >
-              <option className="speed-option" value="0.5">
-                0.5x
-              </option>
-              <option className="speed-option" value="1.0">
-                1x
-              </option>
-              <option className="speed-option" value="1.5">
-                1.5x
-              </option>
-              <option className="speed-option" value="2.0">
-                2x
-              </option>
-            </select> */}
           </>
-        )}
-      </div>
-      <div></div>
+        </>
+      )}
     </div>
   );
 }

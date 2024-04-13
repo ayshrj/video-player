@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useDrag, useDrop } from "react-dnd";
+import "./VideoPlaylist.css";
 
 const VideoItem = ({
   video,
@@ -31,25 +32,18 @@ const VideoItem = ({
     },
   });
 
-  const itemStyle = {
-    opacity: isDragging ? 0.5 : 1,
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: isSelected ? "red" : "transparent", // Set background color based on selection
-    cursor: "pointer",
-    padding: "10px",
-    margin: "5px",
-    border: "1px solid #ccc",
-  };
-
   return (
     <div
       ref={(node) => drag(drop(node))}
-      style={itemStyle}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+        backgroundColor: isSelected ? "red" : "transparent",
+      }}
+      className="playlist-video"
       onClick={() => selectVideo(video)}
     >
-      {video.name}
-      <button
+      <div className="video-name">{video.name}</div> {/* Wrapped video name */}
+      <div
         onClick={(e) => {
           e.stopPropagation(); // Prevents the selectVideo from firing when the button is clicked
           removeVideo(index);
@@ -57,7 +51,7 @@ const VideoItem = ({
         style={{ marginLeft: "10px" }}
       >
         X
-      </button>
+      </div>
     </div>
   );
 };
@@ -84,7 +78,6 @@ const VideoPlaylist = ({ currentVideoSelected, setCurrentVideoSelected }) => {
 
   const selectVideo = (video) => {
     setCurrentVideoSelected(video);
-    // console.log("selected video", video);
   };
 
   const handleFileChange = (event) => {
@@ -93,13 +86,7 @@ const VideoPlaylist = ({ currentVideoSelected, setCurrentVideoSelected }) => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <input
-        type="file"
-        accept="video/*"
-        multiple
-        onChange={handleFileChange}
-      />
-      <div>
+      <div className="playlist-container">
         {videos.map((video, i) => (
           <VideoItem
             key={i}
@@ -111,10 +98,22 @@ const VideoPlaylist = ({ currentVideoSelected, setCurrentVideoSelected }) => {
             isSelected={currentVideoSelected && currentVideoSelected === video}
           />
         ))}
+        <input
+          type="file"
+          accept="video/*"
+          multiple
+          onChange={handleFileChange}
+          className="playlist-video"
+          id="video-adder"
+          style={{ display: "none" }}
+        />
+        <label className="playlist-video" htmlFor="video-adder">
+          Add Video
+        </label>
       </div>
-      {currentVideoSelected && (
+      {/* {currentVideoSelected && (
         <div>Selected Video: {currentVideoSelected.name}</div>
-      )}
+      )} */}
     </DndProvider>
   );
 };

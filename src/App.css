@@ -1,20 +1,4 @@
-:root {
-  --video-width: 60%;
-}
-
-.video-wrapper {
-  position: relative;
-  width: var(--video-width);
-  /* or any specific width */
-  padding-top: calc(0.5625*var(--video-width));
-  /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
-  overflow: hidden;
-}
-
-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.video-player-container {
+    display: flex;
+    flex-direction: row;
 }

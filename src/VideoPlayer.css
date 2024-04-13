@@ -1,37 +1,43 @@
+:root {
+    --video-width: 100%;
+}
+
 .video-wrapper {
+    flex: 2;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: fit-content;
-    height: fit-content;
-    padding: 0;
+    width: var(--video-width);
+    height: 100vh;
+    /* Set to cover the screen vertically */
     background-color: black;
-    font-size: 20px;
+    font-size: 1rem;
+    bottom: 0;
 }
 
 .video {
+    position: absolute;
     z-index: 0;
     width: 100%;
     height: 100%;
+    top: 0;
+    left: 0;
 }
 
 .play-button {
     position: absolute;
     z-index: 1;
     top: 50%;
-    /* Center vertically */
     left: 50%;
-    /* Center horizontally */
     transform: translate(-50%, -50%);
-    /* Centering trick */
 }
 
 .play-button>svg {
-    width: 100px;
-    height: 100px;
+    width: 6.25rem;
+    height: 6.25rem;
     color: grey;
-    stroke: 1;
+    stroke: 0.0625rem;
     transition: color 0.1s ease-in-out;
 }
 
@@ -39,24 +45,28 @@
     color: red;
 }
 
+.volume {
+    z-index: 1;
+    user-select: none;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
 .seek-button {
     position: absolute;
     z-index: 1;
-    bottom: 30px;
-    /* Adjusted to give space for timer and speed */
+    bottom: 1.875rem;
     left: 0;
     right: 0;
-    --c: red;
-    /* active color */
-    --g: 2px;
-    /* the gap */
-    --l: 2px;
-    /* line thickness*/
-    --s: 10px;
-    /* thumb size*/
+}
 
+.input-slider {
+    --c: red;
+    --g: 2px;
+    --l: 2px;
+    --s: 0.625rem;
     height: var(--s);
-    /* needed for Firefox*/
     --_c: color-mix(in srgb, var(--c), #000 var(--p, 0%));
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -67,19 +77,20 @@
     transition: height 0.1s ease-in-out;
 }
 
-.seek-button:focus-visible,
-.seek-button:hover {
+
+.input-slider:focus-visible,
+.input-slider:hover {
     --p: 50%;
-    --s: 20px;
+    --s: 1.25rem;
 }
 
-.seek-button:active,
-.seek-button:focus-visible {
+.input-slider:active,
+.input-slider:focus-visible {
     --_b: var(--s)
 }
 
 /* chromium */
-.seek-button::-webkit-slider-thumb {
+.input-slider::-webkit-slider-thumb {
     height: var(--s);
     aspect-ratio: 1;
     border-radius: 50%;
@@ -91,7 +102,7 @@
 }
 
 /* Firefox */
-.seek-button::-moz-range-thumb {
+.input-slider::-moz-range-thumb {
     height: var(--s);
     width: var(--s);
     background: none;
@@ -109,36 +120,39 @@
     }
 }
 
-.timer {
+.left-buttons {
+    display: flex;
     position: absolute;
     z-index: 1;
-    bottom: 10px;
-    /* Adjusted to be above the seek input */
-    left: 10px;
+    bottom: 0.625rem;
+    left: 0.625rem;
     user-select: none;
     color: white;
+    align-items: center;
+    gap: 10px;
 }
-
 
 .fullscreen {
     position: absolute;
-    bottom: 5px;
-    right: 70px;
+    bottom: 0.3125rem;
+    right: 4.375rem;
 }
 
 .speed {
     position: absolute;
     z-index: 1;
-    bottom: 10px;
-    /* Adjusted to be above the timer */
-    right: 10px;
+    bottom: 0.625rem;
+    right: 0.625rem;
     color: white;
-    background-color: black;
 }
 
 .speed, .speed>div {
-    width: 50px;
+    width: 3.125rem;
     cursor: pointer;
+}
+
+.speed-option {
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .speed-option:hover {
@@ -169,9 +183,17 @@
     height: 100%;
 }
 
+.play-button, .seek-button, .left-buttons, .volume, .fullscreen {
+    transform: .3s;
+}
+
+.hide-buttons {
+    display: none;
+}
+
 :fullscreen .play-button,
-:fullscreen .seek-button,
-:fullscreen .timer,
+:fullscreen .input-slider,
+:fullscreen .left-buttons,
 :fullscreen .fullscreen,
 :fullscreen .speed {
     position: absolute;
