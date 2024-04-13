@@ -32,8 +32,10 @@ const VideoButtons = ({
   openSpeedOption,
   setOpenSpeedOption,
 }) => {
+  // State to manage the visibility of the volume slider
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
+  // Utility function to format seconds into a time string format
   const formatTime = (seconds) => {
     if (seconds < 60) {
       return `0:${seconds.toString().padStart(2, "0")}`;
@@ -51,6 +53,7 @@ const VideoButtons = ({
     }
   };
 
+  // Toggles the mute state of the video
   const toggleMute = () => {
     if (videoRef.current) {
       setIsMuted(!isMuted);
@@ -58,14 +61,17 @@ const VideoButtons = ({
     }
   };
 
-  useEffect(() => {
-    console.log(controlsVisible);
-  }, [controlsVisible]);
+  // Logs changes in control visibility, can be used for debugging
+  // useEffect(() => {
+  //   console.log(controlsVisible);
+  // }, [controlsVisible]);
 
+  // Toggle fullscreen mode for the video player
   const toggleFullscreen = () => {
     const container = videoRef.current.parentNode;
     if (!document.fullscreenElement) {
       setFullscreenOpen(true);
+      // Fullscreen request for cross-browser support
       if (container.requestFullscreen) {
         container.requestFullscreen();
       } else if (container.mozRequestFullScreen) {
@@ -77,6 +83,7 @@ const VideoButtons = ({
       }
     } else {
       setFullscreenOpen(false);
+      // Exit fullscreen for cross-browser support
       if (document.exitFullscreen) {
         document.exitFullscreen();
       } else if (document.mozCancelFullScreen) {
@@ -89,6 +96,7 @@ const VideoButtons = ({
     }
   };
 
+  // Toggle Picture-in-Picture mode
   const togglePictureInPicture = () => {
     const videoElement = videoRef.current;
 
@@ -107,11 +115,13 @@ const VideoButtons = ({
     }
   };
 
+  // Handles volume changes from the slider
   const handleVolumeChange = (event) => {
     setVolume(event.target.value);
     setShowVolumeSlider(true); // Keep slider visible while adjusting
   };
 
+  // Handles rewind action for the video
   const handleRewind = () => {
     if (videoRef.current) {
       const newTime = Math.max(0, videoRef.current.currentTime - 10);
@@ -119,6 +129,7 @@ const VideoButtons = ({
     }
   };
 
+  // Handles forward action for the video
   const handleForward = () => {
     if (videoRef.current) {
       const newTime = Math.min(

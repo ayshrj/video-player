@@ -8,7 +8,10 @@
 ## App Link
 [Video Player App](https://video-player-murex-tau.vercel.app/)
 
-**Note:** This video player uses video files stored on your local PC and does not stream videos from online sources.
+**Note:** 
+- This video player uses video files stored on your local PC and does not stream videos from online sources.
+- Only the CSS that I borrowed was for the input slider design which was taken from [SitePoint](https://www.sitepoint.com/css-custom-range-slider/). Other than that, all CSS was custom-made.
+- The code is heavily commented for ease of understanding. Feel free to check the comments for more insights into the implementation.
 
 ## Features
 ### 1. App Feature
