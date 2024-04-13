@@ -19,9 +19,9 @@
 - Timer displaying current playback time and duration.
 - Autoplay.
 - Speed selector for playback speed adjustment.
-- Rewind 10 seconds and forward 10 seconds.
-- Picture in Picture.
 - Additional Features:
+  - Rewind 10 seconds and forward 10 seconds.
+  - Picture in Picture.
   - Fullscreen mode.
   - Volume control.
   - Thumbnail previews.
