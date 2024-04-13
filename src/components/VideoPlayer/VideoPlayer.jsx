@@ -12,20 +12,32 @@ function VideoPlayer({
   videos,
   updateVideo,
 }) {
+  // State to manage video play/pause status
   const [isPlaying, setIsPlaying] = useState(false);
+  // State for video duration
   const [duration, setDuration] = useState(0);
+  // State to manage playback speed
   const [currentSpeed, setCurrentSpeed] = useState("1.0");
+  // State to manage fullscreen toggle
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
+  // State for managing volume level
   const [volume, setVolume] = useState(100);
+  // State for the dynamic change of play/pause icon
   const [playIcon, setPlayIcon] = useState(<IconPlayerPlay />);
+  // Reference to timeout for hiding controls
   const hideTimeoutRef = useRef(null);
+  // State to show/hide the video controls
   const [controlsVisible, setControlsVisible] = useState(true);
+  // State to manage the visibility of speed options
   const [openSpeedOption, setOpenSpeedOption] = useState(false);
+  // State to manage mute toggle
   const [isMuted, setIsMuted] = useState(false);
-  const [videoFile, setVideoFile] = useState(null); // State to store video file object
+  // State to hold the currently playing video file
+  const [videoFile, setVideoFile] = useState(null);
 
   const videoRef = useRef(null);
 
+  // Function to handle mouse movement to show/hide controls
   const handleMouseMovement = () => {
     setControlsVisible(true);
     clearTimeout(hideTimeoutRef.current);
@@ -34,6 +46,7 @@ function VideoPlayer({
     }, 3000);
   };
 
+  // Add event listeners to video wrapper for mouse movement
   useEffect(() => {
     const videoWrapper = videoRef.current?.parentNode;
     if (videoWrapper) {
@@ -46,12 +59,14 @@ function VideoPlayer({
     }
   }, []);
 
+  // Adjust video volume based on the state
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.volume = volume / 100;
     }
   }, [volume]);
 
+  // Load new video file based on the current selection
   useEffect(() => {
     if (currentVideoSelected !== -1 && videos[currentVideoSelected]?.file) {
       setVideoFile(videos[currentVideoSelected].file); // Update video file object
@@ -60,6 +75,7 @@ function VideoPlayer({
     }
   }, [currentVideoSelected, videos]);
 
+  // Setup video source and handle cleanup
   useEffect(() => {
     if (videoFile) {
       const videoUrl = URL.createObjectURL(videoFile);
@@ -69,6 +85,7 @@ function VideoPlayer({
     }
   }, [videoFile]);
 
+  // Toggle play or pause status
   const togglePlay = () => {
     const video = videoRef.current;
     if (video.paused) {
@@ -80,6 +97,7 @@ function VideoPlayer({
     }
   };
 
+  // Set video duration and seek to last known time
   const handleLoadedMetadata = () => {
     setDuration(videoRef.current.duration);
     if (videos[currentVideoSelected]?.lastTime) {
@@ -87,21 +105,25 @@ function VideoPlayer({
     }
   };
 
+  // Update currentTime for video
   const handleTimeUpdate = () => {
     setCurrentTime(videoRef.current.currentTime);
   };
 
+  // Seek to a new time in the video
   const handleSeek = (event) => {
     const video = videoRef.current;
     video.currentTime = (event.target.value / 100) * duration;
   };
 
+  // Handle changes in playback speed
   const handleSpeedChange = (currentSpeed) => {
     if (currentSpeed) {
       videoRef.current.playbackRate = parseFloat(currentSpeed);
     }
   };
 
+  // Apply playback rate change
   useEffect(() => {
     if (videoRef.current) {
       handleSpeedChange(currentSpeed);
@@ -109,6 +131,7 @@ function VideoPlayer({
     }
   }, [currentSpeed]);
 
+  // Update the play/pause icon based on isPlaying state
   useEffect(() => {
     if (isPlaying) {
       setPlayIcon(<IconPlayerPause />);

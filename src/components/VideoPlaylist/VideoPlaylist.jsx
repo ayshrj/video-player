@@ -12,6 +12,7 @@ const VideoPlaylist = ({
   setCurrentVideoSelected,
   currentTime,
 }) => {
+  // Function to handle the drag and drop of videos in the playlist
   const moveVideo = (dragIndex, hoverIndex) => {
     const dragVideo = videos[dragIndex];
     const updatedVideos = [...videos];
@@ -42,6 +43,7 @@ const VideoPlaylist = ({
     }
   };
 
+  // Function to remove a video from the playlist
   const removeVideo = (index) => {
     const updatedVideos = [...videos];
     updatedVideos.splice(index, 1);
@@ -57,6 +59,7 @@ const VideoPlaylist = ({
     }
   };
 
+  // Function to select a video from the playlist
   const selectVideo = (index) => {
     if (currentVideoSelected) {
       setVideos((prevVideos) => {
@@ -73,6 +76,7 @@ const VideoPlaylist = ({
     setCurrentVideoSelected(index);
   };
 
+  // Function to handle the addition of new videos to the playlist
   const handleFileChange = (event) => {
     const newFiles = Array.from(event.target.files).map((file) => ({
       file,
