@@ -1,25 +1,35 @@
 import React, { useState } from "react";
-import VideoPlayer from "./VideoPlayer";
-import VideoPlaylist from "./VideoPlaylist";
-import "./App.css"; // Import your CSS file
+import VideoPlayer from "./components/VideoPlayer/VideoPlayer";
+import VideoPlaylist from "./components/VideoPlaylist/VideoPlaylist";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import "./App.css";
 
 const App = () => {
   const [currentVideoSelected, setCurrentVideoSelected] = useState(null);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [videos, setVideos] = useState([]);
+
   return (
-    <div className="app-container">
-      {" "}
-      {/* Apply any necessary styles to the app container */}
-      <div className="video-player-container">
-        <VideoPlayer
-          currentVideoSelected={currentVideoSelected}
-          setCurrentVideoSelected={setCurrentVideoSelected}
-        />
-        <VideoPlaylist
-          currentVideoSelected={currentVideoSelected}
-          setCurrentVideoSelected={setCurrentVideoSelected}
-        />
+    <DndProvider backend={HTML5Backend}>
+      <div className="app-container">
+        <div className="video-player-container">
+          <VideoPlayer
+            currentVideoSelected={currentVideoSelected}
+            currentTime={currentTime}
+            setCurrentTime={setCurrentTime}
+            videos={videos}
+          />
+          <VideoPlaylist
+            videos={videos}
+            setVideos={setVideos}
+            currentVideoSelected={currentVideoSelected}
+            setCurrentVideoSelected={setCurrentVideoSelected}
+            currentTime={currentTime}
+          />
+        </div>
       </div>
-    </div>
+    </DndProvider>
   );
 };
 
