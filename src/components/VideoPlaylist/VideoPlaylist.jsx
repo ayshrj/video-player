@@ -15,14 +15,35 @@ const VideoPlaylist = ({
     updatedVideos.splice(dragIndex, 1);
     updatedVideos.splice(hoverIndex, 0, dragVideo);
     setVideos(updatedVideos);
+
+    // Update currentVideoSelected if necessary
+    if (currentVideoSelected !== null) {
+      let updatedSelectedIndex = currentVideoSelected;
+      if (
+        dragIndex < currentVideoSelected &&
+        hoverIndex >= currentVideoSelected
+      ) {
+        updatedSelectedIndex--;
+      } else if (
+        dragIndex > currentVideoSelected &&
+        hoverIndex <= currentVideoSelected
+      ) {
+        updatedSelectedIndex++;
+      }
+      setCurrentVideoSelected(updatedSelectedIndex);
+    }
   };
 
   const removeVideo = (index) => {
     const updatedVideos = [...videos];
     updatedVideos.splice(index, 1);
     setVideos(updatedVideos);
-    if (currentVideoSelected && currentVideoSelected === videos[index]) {
-      setCurrentVideoSelected(null);
+    if (currentVideoSelected) {
+      if (currentVideoSelected === index) {
+        setCurrentVideoSelected(null);
+      } else if (currentVideoSelected > index) {
+        setCurrentVideoSelected(currentVideoSelected - 1);
+      }
     }
   };
 

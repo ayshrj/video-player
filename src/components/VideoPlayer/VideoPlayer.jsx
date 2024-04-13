@@ -9,17 +9,21 @@ function VideoPlayer({
   currentVideoSelected,
   setCurrentVideoSelected,
   videos,
+  updateVideo,
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentSpeed, setCurrentSpeed] = useState("1.0");
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [volume, setVolume] = useState(100);
-  const videoRef = useRef(null);
   const [playIcon, setPlayIcon] = useState(<IconPlayerPlay />);
   const hideTimeoutRef = useRef(null);
   const [controlsVisible, setControlsVisible] = useState(true);
   const [openSpeedOption, setOpenSpeedOption] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [videoFile, setVideoFile] = useState(null); // State to store video file object
+
+  const videoRef = useRef(null);
 
   const handleMouseMovement = () => {
     setControlsVisible(true);
@@ -48,59 +52,19 @@ function VideoPlayer({
   }, [volume]);
 
   useEffect(() => {
-    if (
-      videos[currentVideoSelected]?.file &&
-      videos[currentVideoSelected]?.file instanceof File
-    ) {
-      const videoUrl = URL.createObjectURL(videos[currentVideoSelected]?.file);
+    if (currentVideoSelected !== null && videos[currentVideoSelected]?.file) {
+      setVideoFile(videos[currentVideoSelected].file); // Update video file object
+    }
+  }, [currentVideoSelected, videos]);
+
+  useEffect(() => {
+    if (videoFile) {
+      const videoUrl = URL.createObjectURL(videoFile);
       videoRef.current.src = videoUrl;
 
       return () => URL.revokeObjectURL(videoUrl);
     }
-  }, [currentVideoSelected]);
-
-  useEffect(() => {
-    if (videos[currentVideoSelected]?.file) {
-      videoRef.current.load();
-      setIsPlaying(false);
-      setCurrentTime(0);
-      setDuration(videoRef.current.duration || 0);
-    }
-  }, [currentVideoSelected]);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.volume = volume / 100; // Adjust volume as a fraction of 100
-    }
-  }, [volume]);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleVideoEnd = () => {
-      if (currentVideoSelected < videos.length - 1) {
-        setCurrentVideoSelected(currentVideoSelected + 1);
-      } else {
-        // Optional: handle the case when it's the last video
-        // For example, restart from the first video or stop playback
-        console.log("Reached the end of the playlist");
-      }
-    };
-
-    video.addEventListener("ended", handleVideoEnd);
-
-    return () => {
-      video.removeEventListener("ended", handleVideoEnd);
-    };
-  }, [currentVideoSelected, videos.length, setCurrentVideoSelected]);
-
-  // const handleFileChange = (event) => {
-  //   const files = event.target.files;
-  //   if (files.length > 0) {
-  //     setCurrentVideoSelected(files[0]);
-  //   }
-  // };
+  }, [videoFile]);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -152,12 +116,11 @@ function VideoPlayer({
 
   return (
     <div className="video-wrapper">
-      {videos[currentVideoSelected]?.file && (
+      {videoFile && (
         <>
           <video
             className="video"
             ref={videoRef}
-            src={videos[currentVideoSelected]?.file}
             controls={false}
             onLoadedMetadata={handleLoadedMetadata}
             onTimeUpdate={handleTimeUpdate}
@@ -177,7 +140,8 @@ function VideoPlayer({
             currentTime={currentTime}
             duration={duration}
             volume={volume}
-            isMuted={fullscreenOpen}
+            isMuted={isMuted}
+            setIsMuted={setIsMuted}
             fullscreenOpen={fullscreenOpen}
             currentSpeed={currentSpeed}
             togglePlay={togglePlay}

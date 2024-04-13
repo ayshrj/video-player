@@ -5,6 +5,9 @@ import {
   IconMaximize,
   IconMinimize,
   IconVolume,
+  IconVolume2,
+  IconVolume3,
+  IconVolumeOff,
 } from "@tabler/icons-react";
 
 const VideoButtons = ({
@@ -14,6 +17,7 @@ const VideoButtons = ({
   duration,
   volume,
   isMuted,
+  setIsMuted,
   fullscreenOpen,
   currentSpeed,
   togglePlay,
@@ -86,6 +90,7 @@ const VideoButtons = ({
     setVolume(event.target.value);
     setShowVolumeSlider(true); // Keep slider visible while adjusting
   };
+
   return (
     <div className="video-buttons">
       <div
@@ -114,11 +119,25 @@ const VideoButtons = ({
           onMouseEnter={() => setShowVolumeSlider(true)}
           onMouseLeave={() => setShowVolumeSlider(false)}
         >
-          <IconVolume
-            onClick={() => setShowVolumeSlider(!showVolumeSlider)}
-            color={isMuted ? "gray" : "white"}
-          />
-          {showVolumeSlider && (
+          {isMuted ? (
+            <IconVolumeOff onClick={toggleMute} />
+          ) : volume >= 50 ? (
+            <IconVolume
+              onClick={toggleMute}
+              color={isMuted ? "gray" : "white"}
+            />
+          ) : volume > 0 ? (
+            <IconVolume2
+              onClick={toggleMute}
+              color={isMuted ? "gray" : "white"}
+            />
+          ) : (
+            <IconVolume3
+              onClick={toggleMute}
+              color={isMuted ? "gray" : "white"}
+            />
+          )}
+          {!isMuted && showVolumeSlider && (
             <input
               type="range"
               min="0"
