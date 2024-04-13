@@ -1,5 +1,6 @@
 :root {
     --video-width: 100%;
+    --play-button-color: rgba(0, 0, 0, 0.5);
 }
 
 .video-wrapper {
@@ -53,13 +54,13 @@
 .play-button>svg {
     width: 6.25rem;
     height: 6.25rem;
-    color: rgba(0, 0, 0, 0.5);
+    color: var(--play-button-color);
     stroke: 0.0625rem;
     transition: color 0.1s ease-in-out;
 }
 
-.play-button>svg:hover {
-    color: red;
+.video-wrapper:hover {
+    --play-button-color: red;
 }
 
 .volume {
