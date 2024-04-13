@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import "./VideoPlaylist.css";
 import VideoItem from "../../utils/VideoPlaylist/VideoItem";
+import { IconCrosshair } from "@tabler/icons-react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const VideoPlaylist = ({
   videos,
@@ -19,15 +22,20 @@ const VideoPlaylist = ({
     // Update currentVideoSelected if necessary
     if (currentVideoSelected !== null) {
       let updatedSelectedIndex = currentVideoSelected;
-      if (
+      if (dragIndex === currentVideoSelected) {
+        // Dragging the currently selected video
+        updatedSelectedIndex = hoverIndex;
+      } else if (
         dragIndex < currentVideoSelected &&
         hoverIndex >= currentVideoSelected
       ) {
+        // Moving a video from before to after the currently selected video
         updatedSelectedIndex--;
       } else if (
         dragIndex > currentVideoSelected &&
         hoverIndex <= currentVideoSelected
       ) {
+        // Moving a video from after to before the currently selected video
         updatedSelectedIndex++;
       }
       setCurrentVideoSelected(updatedSelectedIndex);
@@ -40,9 +48,11 @@ const VideoPlaylist = ({
     setVideos(updatedVideos);
     if (currentVideoSelected) {
       if (currentVideoSelected === index) {
-        setCurrentVideoSelected(null);
+        setCurrentVideoSelected(-1);
       } else if (currentVideoSelected > index) {
         setCurrentVideoSelected(currentVideoSelected - 1);
+      } else {
+        setCurrentVideoSelected(-1);
       }
     }
   };
@@ -71,37 +81,43 @@ const VideoPlaylist = ({
     setVideos((prevVideos) => [...prevVideos, ...newFiles]);
   };
 
-  useEffect(() => {
-    console.log("videos: ", videos);
-  }, [videos]);
+  // useEffect(() => {
+  //   console.log("videos: ", videos);
+  // }, [videos]);
 
   return (
-    <div className="playlist-container">
-      {videos.map((video, i) => (
-        <VideoItem
-          key={i}
-          video={video}
-          index={i}
-          moveVideo={moveVideo}
-          removeVideo={removeVideo}
-          selectVideo={selectVideo}
-          isSelected={currentVideoSelected === i}
-          videos={videos}
+    <DndProvider backend={HTML5Backend}>
+      <div className="playlist-container">
+        <input
+          type="file"
+          accept="video/*"
+          multiple
+          onChange={handleFileChange}
+          id="video-adder"
+          style={{ display: "none" }}
         />
-      ))}
-      <input
-        type="file"
-        accept="video/*"
-        multiple
-        onChange={handleFileChange}
-        className="playlist-video"
-        id="video-adder"
-        style={{ display: "none" }}
-      />
-      <label className="playlist-video" htmlFor="video-adder">
-        Add Video
-      </label>
-    </div>
+        <label
+          className="playlist-video add-videos-button"
+          htmlFor="video-adder"
+        >
+          <IconCrosshair stroke={2} /> Add Video/s
+        </label>
+        <div className="video-name-container">
+          {videos.map((video, i) => (
+            <VideoItem
+              key={i}
+              video={video}
+              index={i}
+              moveVideo={moveVideo}
+              removeVideo={removeVideo}
+              selectVideo={selectVideo}
+              isSelected={currentVideoSelected === i}
+              videos={videos}
+            />
+          ))}
+        </div>
+      </div>
+    </DndProvider>
   );
 };
 

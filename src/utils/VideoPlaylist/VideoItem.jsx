@@ -1,5 +1,6 @@
 import React from "react";
 import { useDrag, useDrop } from "react-dnd";
+import { IconGripVertical, IconX } from "@tabler/icons-react";
 
 const VideoItem = ({
   video,
@@ -32,15 +33,20 @@ const VideoItem = ({
 
   return (
     <div
-      ref={(node) => drag(drop(node))}
+      ref={drop}
       style={{
-        opacity: isDragging ? 0.5 : 1,
-        backgroundColor: isSelected ? "red" : "transparent",
+        // opacity: isDragging ? 0.5 : 1,
+        backgroundColor: !isSelected ? "transparent" : "red",
       }}
       className="playlist-video"
       onClick={() => selectVideo(index)}
     >
-      <div className="video-name">{videos[index].file.name}</div>
+      <div className="playlist-video-name">
+        <div className="playlist-video-drag" ref={drag}>
+          <IconGripVertical stroke={2} />
+        </div>
+        {videos[index].file.name}
+      </div>
       <div
         onClick={(e) => {
           e.stopPropagation(); // Prevents the selectVideo from firing when the button is clicked
@@ -48,7 +54,7 @@ const VideoItem = ({
         }}
         style={{ marginLeft: "10px" }}
       >
-        X
+        <IconX stroke={2} />
       </div>
     </div>
   );

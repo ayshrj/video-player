@@ -8,6 +8,9 @@ import {
   IconVolume2,
   IconVolume3,
   IconVolumeOff,
+  IconRewindForward10,
+  IconRewindBackward10,
+  IconPictureInPicture,
 } from "@tabler/icons-react";
 
 const VideoButtons = ({
@@ -86,9 +89,44 @@ const VideoButtons = ({
     }
   };
 
+  const togglePictureInPicture = () => {
+    const videoElement = videoRef.current;
+
+    if (!document.pictureInPictureElement) {
+      if (videoElement.requestPictureInPicture) {
+        videoElement.requestPictureInPicture().catch((error) => {
+          console.error("Picture-in-Picture Error:", error);
+        });
+      }
+    } else {
+      if (document.exitPictureInPicture) {
+        document.exitPictureInPicture().catch((error) => {
+          console.error("Exit Picture-in-Picture Error:", error);
+        });
+      }
+    }
+  };
+
   const handleVolumeChange = (event) => {
     setVolume(event.target.value);
     setShowVolumeSlider(true); // Keep slider visible while adjusting
+  };
+
+  const handleRewind = () => {
+    if (videoRef.current) {
+      const newTime = Math.max(0, videoRef.current.currentTime - 10);
+      videoRef.current.currentTime = newTime;
+    }
+  };
+
+  const handleForward = () => {
+    if (videoRef.current) {
+      const newTime = Math.min(
+        videoRef.current.duration,
+        videoRef.current.currentTime + 10
+      );
+      videoRef.current.currentTime = newTime;
+    }
   };
 
   return (
@@ -114,6 +152,10 @@ const VideoButtons = ({
           {formatTime(currentTime.toFixed(0))} /{" "}
           {formatTime(duration.toFixed(0))}
         </span>
+        <div className="rewind-button">
+          <IconRewindBackward10 stroke={2} onClick={handleRewind} />
+          <IconRewindForward10 stroke={2} onClick={handleForward} />
+        </div>
         <div
           className="volume"
           onMouseEnter={() => setShowVolumeSlider(true)}
@@ -152,64 +194,70 @@ const VideoButtons = ({
         </div>
       </div>
       <div
-        className={`fullscreen ${!controlsVisible ? "hide-buttons" : ""}`}
-        onClick={toggleFullscreen}
+        className={`right-buttons ${!controlsVisible ? "hide-buttons" : ""}`}
       >
-        {!fullscreenOpen ? (
-          <IconMaximize color="white" />
-        ) : (
-          <IconMinimize color="white" />
-        )}
-      </div>
-      <div className={`speed ${!controlsVisible ? "hide-buttons" : ""}`}>
-        {openSpeedOption && (
-          <>
-            <div
-              onClick={() => setCurrentSpeed("0.5")}
-              style={{
-                backgroundColor: currentSpeed === "0.5" ? "red" : "",
-              }}
-              className="speed-option"
-            >
-              0.5x
+        <div className="pict-in-pict" onClick={togglePictureInPicture}>
+          <IconPictureInPicture stroke="2" />
+        </div>
+        <div className="fullscreen" onClick={toggleFullscreen}>
+          {!fullscreenOpen ? (
+            <IconMaximize color="white" />
+          ) : (
+            <IconMinimize color="white" />
+          )}
+        </div>
+        <div className="speed">
+          {openSpeedOption && (
+            <div className="speed-options">
+              <div
+                onClick={() => setCurrentSpeed("0.5")}
+                style={{
+                  backgroundColor: currentSpeed === "0.5" ? "red" : "",
+                }}
+                className="speed-option"
+              >
+                0.5x
+              </div>
+              <div
+                onClick={() => setCurrentSpeed("1.0")}
+                style={{
+                  backgroundColor: currentSpeed === "1.0" ? "red" : "",
+                }}
+                className="speed-option"
+              >
+                1.0x
+              </div>
+              <div
+                onClick={() => setCurrentSpeed("1.5")}
+                style={{
+                  backgroundColor: currentSpeed === "1.5" ? "red" : "",
+                }}
+                className="speed-option"
+              >
+                1.5x
+              </div>
+              <div
+                onClick={() => setCurrentSpeed("2.0")}
+                style={{
+                  backgroundColor: currentSpeed === "2.0" ? "red" : "",
+                }}
+                className="speed-option"
+              >
+                2.0x
+              </div>
             </div>
-            <div
-              onClick={() => setCurrentSpeed("1.0")}
-              style={{
-                backgroundColor: currentSpeed === "1.0" ? "red" : "",
-              }}
-              className="speed-option"
-            >
-              1.0x
+          )}
+          <div
+            onClick={() => {
+              setOpenSpeedOption(!openSpeedOption);
+            }}
+            className="speed-selector"
+          >
+            <div>{`${currentSpeed}x`}</div>
+            <div>
+              {!openSpeedOption ? <IconChevronUp /> : <IconChevronDown />}
             </div>
-            <div
-              onClick={() => setCurrentSpeed("1.5")}
-              style={{
-                backgroundColor: currentSpeed === "1.5" ? "red" : "",
-              }}
-              className="speed-option"
-            >
-              1.5x
-            </div>
-            <div
-              onClick={() => setCurrentSpeed("2.0")}
-              style={{
-                backgroundColor: currentSpeed === "2.0" ? "red" : "",
-              }}
-              className="speed-option"
-            >
-              2.0x
-            </div>
-          </>
-        )}
-        <div
-          onClick={() => {
-            setOpenSpeedOption(!openSpeedOption);
-          }}
-          className="speed-selector"
-        >
-          {`${currentSpeed}x`}
-          {!openSpeedOption ? <IconChevronUp /> : <IconChevronDown />}
+          </div>
         </div>
       </div>
     </div>

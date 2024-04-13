@@ -1,0 +1,25 @@
+/* ScrollBar.css */
+*::-webkit-scrollbar {
+    width: 12px;
+    /* width of the entire scrollbar */
+    height: 8px;
+    /* height of the horizontal scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    /* color of the track (part the scrollbar can move within) */
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* color of the scroll thumb */
+    border-radius: 10px;
+    /* roundness of the scrollbar thumb */
+    border: 2px solid #f0f0f0;
+    /* Creates padding around scroll thumb */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}

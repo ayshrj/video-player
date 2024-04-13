@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "./VideoPlayer.css";
 import { IconPlayerPlay, IconPlayerPause } from "@tabler/icons-react";
 import VideoButtons from "../../utils/VideoPlayer/VideoButtons";
+import appIcon from "../../assets/defaultIcon.png";
 
 function VideoPlayer({
   currentTime,
@@ -52,8 +53,10 @@ function VideoPlayer({
   }, [volume]);
 
   useEffect(() => {
-    if (currentVideoSelected !== null && videos[currentVideoSelected]?.file) {
+    if (currentVideoSelected !== -1 && videos[currentVideoSelected]?.file) {
       setVideoFile(videos[currentVideoSelected].file); // Update video file object
+    } else if (currentVideoSelected === -1) {
+      setVideoFile(null);
     }
   }, [currentVideoSelected, videos]);
 
@@ -116,7 +119,7 @@ function VideoPlayer({
 
   return (
     <div className="video-wrapper">
-      {videoFile && (
+      {videoFile ? (
         <>
           <video
             className="video"
@@ -154,6 +157,8 @@ function VideoPlayer({
             setOpenSpeedOption={setOpenSpeedOption}
           />
         </>
+      ) : (
+        <img src={appIcon} className="default-icon" />
       )}
     </div>
   );

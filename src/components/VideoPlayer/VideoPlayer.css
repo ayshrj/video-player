@@ -25,13 +25,20 @@
     left: 0;
 }
 
+.default-icon {
+    width: 10rem;
+}
 
-@media (max-width: 1110px) {
+@media (max-width: 1100px) {
     .video-wrapper {
         flex: 1;
         height: calc(0.5625 * 100vw);
         position: fixed;
         top: 0;
+    }
+
+    .default-icon {
+        width: 5rem;
     }
 }
 
@@ -46,7 +53,7 @@
 .play-button>svg {
     width: 6.25rem;
     height: 6.25rem;
-    color: grey;
+    color: rgba(0, 0, 0, 0.5);
     stroke: 0.0625rem;
     transition: color 0.1s ease-in-out;
 }
@@ -134,26 +141,47 @@
     display: flex;
     position: absolute;
     z-index: 1;
-    bottom: 0.625rem;
+    bottom: 0.325rem;
     left: 0.625rem;
     user-select: none;
     color: white;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
+}
+
+.right-buttons {
+    position: absolute;
+    bottom: 0.225rem;
+    right: 0.625rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+.pict-in-pict {
+    right: 100px;
 }
 
 .fullscreen {
-    position: absolute;
-    bottom: 0.3125rem;
-    right: 4.375rem;
+    right: 65px;
 }
 
 .speed {
-    position: absolute;
-    z-index: 1;
-    bottom: 0.625rem;
-    right: 0.625rem;
-    color: white;
+    right: 0px;
+}
+
+.speed-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.speed-option {
+    width: 100%;
+    padding: 4px 10px 4px 10px;
+    align-items: center;
 }
 
 .speed, .speed>div {
@@ -167,6 +195,22 @@
 
 .speed-option:hover {
     color: lightpink;
+}
+
+.speed-selector {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2px;
+}
+
+.speed-selector>div>svg {
+    transform: translateY(2px);
+}
+
+.speed-selector:hover {
+    color: white;
 }
 
 .speed-selector {
@@ -197,15 +241,33 @@
     transform: .3s;
 }
 
-.hide-buttons {
+.hide-buttons, .hide-buttons>*, .hide-buttons>*>* {
     display: none;
 }
 
 :fullscreen .play-button,
 :fullscreen .input-slider,
 :fullscreen .left-buttons,
+:fullscreen .right-buttons,
 :fullscreen .fullscreen,
+:fullscreen .pict-in-pict,
 :fullscreen .speed {
     position: absolute;
     z-index: 1000;
+}
+
+.rewind-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rewind-button>svg, .volume>svg, .pict-in-pict>svg, .fullscreen>svg, .speed {
+    cursor: pointer;
+    color: white;
+}
+
+.rewind-button>svg:hover, .volume>svg:hover, .pict-in-pict>svg:hover, .fullscreen>svg:hover {
+    color: red;
+    stroke: red;
 }
