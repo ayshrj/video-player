@@ -1,0 +1,179 @@
+.video-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    padding: 0;
+    background-color: black;
+    font-size: 20px;
+}
+
+.video {
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.play-button {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    /* Center vertically */
+    left: 50%;
+    /* Center horizontally */
+    transform: translate(-50%, -50%);
+    /* Centering trick */
+}
+
+.play-button>svg {
+    width: 100px;
+    height: 100px;
+    color: grey;
+    stroke: 1;
+    transition: color 0.1s ease-in-out;
+}
+
+.play-button>svg:hover {
+    color: red;
+}
+
+.seek-button {
+    position: absolute;
+    z-index: 1;
+    bottom: 30px;
+    /* Adjusted to give space for timer and speed */
+    left: 0;
+    right: 0;
+    --c: red;
+    /* active color */
+    --g: 2px;
+    /* the gap */
+    --l: 2px;
+    /* line thickness*/
+    --s: 10px;
+    /* thumb size*/
+
+    height: var(--s);
+    /* needed for Firefox*/
+    --_c: color-mix(in srgb, var(--c), #000 var(--p, 0%));
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: none;
+    cursor: pointer;
+    overflow: hidden;
+    transition: height 0.1s ease-in-out;
+}
+
+.seek-button:focus-visible,
+.seek-button:hover {
+    --p: 50%;
+    --s: 20px;
+}
+
+.seek-button:active,
+.seek-button:focus-visible {
+    --_b: var(--s)
+}
+
+/* chromium */
+.seek-button::-webkit-slider-thumb {
+    height: var(--s);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    box-shadow: 0 0 0 var(--_b, var(--l)) inset var(--_c);
+    border-image: linear-gradient(90deg, var(--_c) 50%, #ababab 0) 0 1/calc(50% - var(--l)/2) 100vw/0 calc(100vw + var(--g));
+    -webkit-appearance: none;
+    appearance: none;
+    transition: .3s;
+}
+
+/* Firefox */
+.seek-button::-moz-range-thumb {
+    height: var(--s);
+    width: var(--s);
+    background: none;
+    border-radius: 50%;
+    box-shadow: 0 0 0 var(--_b, var(--l)) inset var(--_c);
+    border-image: linear-gradient(90deg, var(--_c) 50%, #ababab 0) 0 1/calc(50% - var(--l)/2) 100vw/0 calc(100vw + var(--g));
+    -moz-appearance: none;
+    appearance: none;
+    transition: .3s;
+}
+
+@supports not (color: color-mix(in srgb, red, red)) {
+    input {
+        --_c: var(--c);
+    }
+}
+
+.timer {
+    position: absolute;
+    z-index: 1;
+    bottom: 10px;
+    /* Adjusted to be above the seek input */
+    left: 10px;
+    user-select: none;
+    color: white;
+}
+
+
+.fullscreen {
+    position: absolute;
+    bottom: 5px;
+    right: 70px;
+}
+
+.speed {
+    position: absolute;
+    z-index: 1;
+    bottom: 10px;
+    /* Adjusted to be above the timer */
+    right: 10px;
+    color: white;
+    background-color: black;
+}
+
+.speed, .speed>div {
+    width: 50px;
+    cursor: pointer;
+}
+
+.speed-option:hover {
+    color: lightpink;
+}
+
+.speed-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.speed-selector:hover {
+    color: white;
+}
+
+/* Fullscreen specific styles */
+:fullscreen .video-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+:fullscreen .video {
+    width: 100%;
+    height: 100%;
+}
+
+:fullscreen .play-button,
+:fullscreen .seek-button,
+:fullscreen .timer,
+:fullscreen .fullscreen,
+:fullscreen .speed {
+    position: absolute;
+    z-index: 1000;
+}
