@@ -8,6 +8,8 @@
 ## App Link
 [Video Player App](https://video-player-murex-tau.vercel.app/)
 
+**Note:** This video player uses video files stored on your local PC and does not stream videos from online sources.
+
 ## Features
 ### 1. App Feature
 - Application responsive for various screen sizes.
