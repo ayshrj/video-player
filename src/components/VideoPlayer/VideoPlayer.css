@@ -25,6 +25,16 @@
     left: 0;
 }
 
+
+@media (max-width: 1110px) {
+    .video-wrapper {
+        flex: 1;
+        height: calc(0.5625 * 100vw);
+        position: fixed;
+        top: 0;
+    }
+}
+
 .play-button {
     position: absolute;
     z-index: 1;

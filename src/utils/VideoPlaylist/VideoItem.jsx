@@ -8,6 +8,7 @@ const VideoItem = ({
   removeVideo,
   selectVideo,
   isSelected,
+  videos,
 }) => {
   const [{ isDragging }, drag] = useDrag({
     type: "video",
@@ -37,10 +38,9 @@ const VideoItem = ({
         backgroundColor: isSelected ? "red" : "transparent",
       }}
       className="playlist-video"
-      onClick={() => selectVideo(video)}
+      onClick={() => selectVideo(index)}
     >
-      <div className="video-name">{video.file.name}</div>{" "}
-      {/* Wrapped video name */}
+      <div className="video-name">{videos[index].file.name}</div>
       <div
         onClick={(e) => {
           e.stopPropagation(); // Prevents the selectVideo from firing when the button is clicked

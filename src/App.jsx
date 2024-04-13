@@ -18,6 +18,7 @@ const App = () => {
             currentVideoSelected={currentVideoSelected}
             currentTime={currentTime}
             setCurrentTime={setCurrentTime}
+            setCurrentVideoSelected={setCurrentVideoSelected}
             videos={videos}
           />
           <VideoPlaylist

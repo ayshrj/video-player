@@ -7,6 +7,7 @@ function VideoPlayer({
   currentTime,
   setCurrentTime,
   currentVideoSelected,
+  setCurrentVideoSelected,
   videos,
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -48,10 +49,10 @@ function VideoPlayer({
 
   useEffect(() => {
     if (
-      currentVideoSelected?.file &&
-      currentVideoSelected?.file instanceof File
+      videos[currentVideoSelected]?.file &&
+      videos[currentVideoSelected]?.file instanceof File
     ) {
-      const videoUrl = URL.createObjectURL(currentVideoSelected?.file);
+      const videoUrl = URL.createObjectURL(videos[currentVideoSelected]?.file);
       videoRef.current.src = videoUrl;
 
       return () => URL.revokeObjectURL(videoUrl);
@@ -59,7 +60,7 @@ function VideoPlayer({
   }, [currentVideoSelected]);
 
   useEffect(() => {
-    if (currentVideoSelected?.file) {
+    if (videos[currentVideoSelected]?.file) {
       videoRef.current.load();
       setIsPlaying(false);
       setCurrentTime(0);
@@ -72,6 +73,27 @@ function VideoPlayer({
       videoRef.current.volume = volume / 100; // Adjust volume as a fraction of 100
     }
   }, [volume]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleVideoEnd = () => {
+      if (currentVideoSelected < videos.length - 1) {
+        setCurrentVideoSelected(currentVideoSelected + 1);
+      } else {
+        // Optional: handle the case when it's the last video
+        // For example, restart from the first video or stop playback
+        console.log("Reached the end of the playlist");
+      }
+    };
+
+    video.addEventListener("ended", handleVideoEnd);
+
+    return () => {
+      video.removeEventListener("ended", handleVideoEnd);
+    };
+  }, [currentVideoSelected, videos.length, setCurrentVideoSelected]);
 
   // const handleFileChange = (event) => {
   //   const files = event.target.files;
@@ -93,8 +115,8 @@ function VideoPlayer({
 
   const handleLoadedMetadata = () => {
     setDuration(videoRef.current.duration);
-    if (currentVideoSelected?.lastTime) {
-      videoRef.current.currentTime = currentVideoSelected.lastTime;
+    if (videos[currentVideoSelected]?.lastTime) {
+      videoRef.current.currentTime = videos[currentVideoSelected].lastTime;
     }
   };
 
@@ -130,12 +152,12 @@ function VideoPlayer({
 
   return (
     <div className="video-wrapper">
-      {currentVideoSelected?.file && (
+      {videos[currentVideoSelected]?.file && (
         <>
           <video
             className="video"
             ref={videoRef}
-            src={currentVideoSelected?.file}
+            src={videos[currentVideoSelected]?.file}
             controls={false}
             onLoadedMetadata={handleLoadedMetadata}
             onTimeUpdate={handleTimeUpdate}

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-
 import "./VideoPlaylist.css";
 import VideoItem from "../../utils/VideoPlaylist/VideoItem";
 
@@ -27,17 +26,20 @@ const VideoPlaylist = ({
     }
   };
 
-  const selectVideo = (video) => {
+  const selectVideo = (index) => {
     if (currentVideoSelected) {
-      setVideos((prevVideos) =>
-        prevVideos.map((prevVideo) =>
-          prevVideo === currentVideoSelected
-            ? { ...prevVideo, lastTime: currentTime }
-            : prevVideo
-        )
-      );
+      setVideos((prevVideos) => {
+        let newVideos = [...prevVideos];
+
+        newVideos[currentVideoSelected] = {
+          ...newVideos[currentVideoSelected],
+          lastTime: currentTime,
+        };
+
+        return newVideos;
+      });
     }
-    setCurrentVideoSelected(video);
+    setCurrentVideoSelected(index);
   };
 
   const handleFileChange = (event) => {
@@ -62,7 +64,8 @@ const VideoPlaylist = ({
           moveVideo={moveVideo}
           removeVideo={removeVideo}
           selectVideo={selectVideo}
-          isSelected={currentVideoSelected === video}
+          isSelected={currentVideoSelected === i}
+          videos={videos}
         />
       ))}
       <input

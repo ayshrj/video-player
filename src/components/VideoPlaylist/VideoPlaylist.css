@@ -5,6 +5,12 @@
     overflow-y: auto;
 }
 
+@media (max-width: 1110px) {
+    .playlist-container {
+        margin-top: calc(0.5625*100vw);
+    }
+}
+
 .playlist-video, input[type="file"].playlist-video {
     flex: 1;
     display: flex;
