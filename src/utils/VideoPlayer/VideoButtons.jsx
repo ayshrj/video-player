@@ -31,6 +31,9 @@ const VideoButtons = ({
   videoRef,
   openSpeedOption,
   setOpenSpeedOption,
+  handleRewind,
+  handleForward,
+  togglePictureInPicture,
 }) => {
   // State to manage the visibility of the volume slider
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
@@ -96,48 +99,10 @@ const VideoButtons = ({
     }
   };
 
-  // Toggle Picture-in-Picture mode
-  const togglePictureInPicture = () => {
-    const videoElement = videoRef.current;
-
-    if (!document.pictureInPictureElement) {
-      if (videoElement.requestPictureInPicture) {
-        videoElement.requestPictureInPicture().catch((error) => {
-          console.error("Picture-in-Picture Error:", error);
-        });
-      }
-    } else {
-      if (document.exitPictureInPicture) {
-        document.exitPictureInPicture().catch((error) => {
-          console.error("Exit Picture-in-Picture Error:", error);
-        });
-      }
-    }
-  };
-
   // Handles volume changes from the slider
   const handleVolumeChange = (event) => {
     setVolume(event.target.value);
     setShowVolumeSlider(true); // Keep slider visible while adjusting
-  };
-
-  // Handles rewind action for the video
-  const handleRewind = () => {
-    if (videoRef.current) {
-      const newTime = Math.max(0, videoRef.current.currentTime - 10);
-      videoRef.current.currentTime = newTime;
-    }
-  };
-
-  // Handles forward action for the video
-  const handleForward = () => {
-    if (videoRef.current) {
-      const newTime = Math.min(
-        videoRef.current.duration,
-        videoRef.current.currentTime + 10
-      );
-      videoRef.current.currentTime = newTime;
-    }
   };
 
   return (

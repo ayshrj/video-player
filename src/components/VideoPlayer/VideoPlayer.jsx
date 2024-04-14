@@ -105,6 +105,44 @@ function VideoPlayer({
     }
   };
 
+  // Handles rewind action for the video
+  const handleRewind = () => {
+    if (videoRef.current) {
+      const newTime = Math.max(0, videoRef.current.currentTime - 10);
+      videoRef.current.currentTime = newTime;
+    }
+  };
+
+  // Handles forward action for the video
+  const handleForward = () => {
+    if (videoRef.current) {
+      const newTime = Math.min(
+        videoRef.current.duration,
+        videoRef.current.currentTime + 10
+      );
+      videoRef.current.currentTime = newTime;
+    }
+  };
+
+  // Toggle Picture-in-Picture mode
+  const togglePictureInPicture = () => {
+    const videoElement = videoRef.current;
+
+    if (!document.pictureInPictureElement) {
+      if (videoElement.requestPictureInPicture) {
+        videoElement.requestPictureInPicture().catch((error) => {
+          console.error("Picture-in-Picture Error:", error);
+        });
+      }
+    } else {
+      if (document.exitPictureInPicture) {
+        document.exitPictureInPicture().catch((error) => {
+          console.error("Exit Picture-in-Picture Error:", error);
+        });
+      }
+    }
+  };
+
   // Update currentTime for video
   const handleTimeUpdate = () => {
     setCurrentTime(videoRef.current.currentTime);
@@ -139,6 +177,72 @@ function VideoPlayer({
       setPlayIcon(<IconPlayerPlay />);
     }
   }, [isPlaying]);
+
+  useEffect(() => {
+    if (videoFile) {
+      // Define the function to handle the key press event
+      let newVolume;
+      const handleKeyPress = (event) => {
+        switch (event.key) {
+          case " ":
+            togglePlay();
+            break;
+          case "+":
+            if (currentSpeed === "0.5") {
+              setCurrentSpeed("1.0");
+              handleSpeedChange("1.0");
+            } else if (currentSpeed === "1.0") {
+              setCurrentSpeed("1.5");
+              handleSpeedChange("1.5");
+            } else if (currentSpeed === "1.5") {
+              setCurrentSpeed("2.0");
+              handleSpeedChange("2.0");
+            }
+            break;
+          case "-":
+            if (currentSpeed === "2.0") {
+              setCurrentSpeed("1.5");
+              handleSpeedChange("1.5");
+            } else if (currentSpeed === "1.5") {
+              setCurrentSpeed("1.0");
+              handleSpeedChange("1.0");
+            } else if (currentSpeed === "1.0") {
+              setCurrentSpeed("0.5");
+              handleSpeedChange("0.5");
+            }
+            break;
+          case "ArrowUp":
+            newVolume = Math.min(100, volume + 10);
+            setVolume(newVolume);
+            break;
+          case "ArrowDown":
+            newVolume = Math.max(0, volume - 10);
+            setVolume(newVolume);
+            break;
+          case "ArrowLeft":
+            handleRewind();
+            break;
+          case "ArrowRight":
+            handleForward();
+            break;
+          case "p" || "P":
+            togglePictureInPicture();
+            break;
+          default:
+            // Handle other keys or do nothing
+            break;
+        }
+      };
+
+      // Add event listener for the 'keydown' event
+      window.addEventListener("keydown", handleKeyPress);
+
+      // Cleanup function to remove the event listener
+      return () => {
+        window.removeEventListener("keydown", handleKeyPress);
+      };
+    }
+  }, []);
 
   return (
     <div className="video-wrapper">
@@ -178,6 +282,9 @@ function VideoPlayer({
             videoRef={videoRef}
             openSpeedOption={openSpeedOption}
             setOpenSpeedOption={setOpenSpeedOption}
+            handleRewind={handleRewind}
+            handleForward={handleForward}
+            togglePictureInPicture={togglePictureInPicture}
           />
         </>
       ) : (

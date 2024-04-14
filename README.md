@@ -39,6 +39,13 @@ This command will start the development server and open the app in your default 
 ## Features
 ### 1. App Feature
 - Application responsive for various screen sizes.
+- Keyboard shortcuts for ease of use.
+   - 'Space' to Pause/Play
+   - 'Arrow Right' to forward 10 sec
+   - 'Arrow Left' to rewind 10 sec
+   - 'P' for Picture in Picture
+   - '-' for Speed Decrease
+   - '+' for Speed Increase
 
 ### 2. Video Player Component
 - Play/Pause toggle.
