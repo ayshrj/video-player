@@ -39,7 +39,6 @@ This command will start the development server and open the app in your default 
 ## Features
 ### 1. App Feature
 - Application responsive for various screen sizes.
-- Keyboard shortcuts for ease of use.
 
 ### 2. Video Player Component
 - Play/Pause toggle.
