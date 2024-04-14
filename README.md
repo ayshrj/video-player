@@ -31,7 +31,7 @@
 Once you have installed the dependencies, you can run the app using:
 
 ```
-npm start
+npm run dev
 ```
 
 This command will start the development server and open the app in your default web browser.
